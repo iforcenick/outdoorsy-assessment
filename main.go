@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"net/http"
 
 	"github.com/joho/godotenv"
 )
@@ -19,4 +20,14 @@ func main() {
 		log.Fatal(err)
 	}
 	defer db.Close()
+
+	controller := RentalController{db}
+
+	router := CreateRouter(controller)
+
+	// Run server
+	log.Println("server is running on port 8080. press ctrl + c to quit.")
+	if err := http.ListenAndServe(":8080", router); err != nil {
+		log.Fatal(err)
+	}
 }
